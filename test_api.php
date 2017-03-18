@@ -2,7 +2,7 @@
 
 require_once('api/api.php');
 
-$db = Database::getIntance();
+$db = Database::getInstance();
 
 // SQL select statement by using the method select_all($var1, null, null)
 // This will accept 3 parameters the first one is the table name that will be selected the second is
@@ -94,10 +94,12 @@ print_r("Returned rows: " . $num_rows);
 </table> <br />
 <?php
 
-$db->where("WHERE id > '2002' ");
-$users_two = $db->query("SELECT id AS lesson_id, topic_name FROM tbl_lessons WHERE id > '2002' ");
+$db->where("WHERE id > '2002' LIMIT 1000");
+$users_two = $db->query("SELECT id AS lesson_id, topic_name FROM tbl_lessons");
+if (isset($users_two)) {
 $num_rows = $db->get_num_rows();
 print_r("Returned rows: " . $num_rows);
+}
 ?>
 
 <table border="1" cellpadding="10" cellspacing="0">
@@ -118,3 +120,30 @@ print_r("Returned rows: " . $num_rows);
       ?>
    </tbody>
 </table>
+
+
+<?php
+// SQL insert statement by using the method inser($table_name, array())
+// This methods accepts two parameter. The first parameter is the name of the table which will be data inserted
+// The second is the data will be insert which is associative array consist of key value pair.
+// The key is the column name in your table and the value is the data will be inserted in the table
+// Consider this example:
+// $data = array('fname' => 'Vincent', 'lname' => 'Llauderes', 'mname' => 'Calma');
+// Call the insert method
+// $db->insert('tbl_users', $data); // This will output INSERT INTO tbl_users (fname, lname, mname) VALUES ('Vincent', 'Llauderes', 'Calma')
+// Note: the return value of this method is 1 or 0 this will indicate if the query is work or not!
+// If you want to insert multiple data's you can achieve this by using multiple associative array inside an array
+// Consider this example:
+/* $data =
+array(
+array('fname' => 'Vincent', 'lname' => 'Llauderes', 'mname' => 'Calma'),
+array('fname' => 'Vianca', 'lname' => 'Llauderes', 'mname' => 'Calma'),
+array('fname' => 'Vench John', 'lname' => 'Llauderes', 'mname' => 'Calma'),
+);
+*/
+
+// echo $db->insert('tbl_users', array(array('fname'=>'1'), array('fname'=>'2'), array('fname'=>'3'), array('fname'=>'4'), array('fname'=>'5')));
+//
+// echo '<br />'.$db->get_insert_id();
+
+?>
