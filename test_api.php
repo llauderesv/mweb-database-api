@@ -5,113 +5,26 @@
 
 </style>
 <?php
-
-// require_once('api/mweb.php');
-
-// $db = mweb::connect('localhost', 'root', 'llauderesv321', 'mweb0');
-
 require_once('api/mweb_pdo.php');
 
 $db = mweb_pdo::connect('localhost', 'root', 'llauderesv321', 'mweb0');
-
-// $data =
-//    array(
-//      array('fname' => 'John', 'lname' => 'Cruz', 'mname' => 'De Ocampo'),
-//      array('fname' => 'Alex', 'lname' => 'Cruz', 'mname' => 'De Ocampo'),
-//      array('fname' => 'Johny', 'lname' => 'Cruz', 'mname' => 'De Ocampo')
-//    );
-// $db->insert('tbl_users', $data);
-// print_r($db->execute());
-//print_r($db->check_query());
-
-//$db->commit();
-
-//$db->beginTransaction();
-//print_r($db->check_query());
-
-// $data2 =array('fname' => 's', 'lname' => 'Llauderes', 'mname' => 'Calma');
-// $db->update('tbl_users', $data2);
-// print_r($db->execute());
-// print_r($db->check_query());
-
-// $db->delete('tbl_users');
-// $db->where(array('id>' => '1152'));
-// print_r($db->execute());
-
-
-$arr = array('id=' => '2001', 'forum_id=' => '4001');
-$db->select_all('tbl_comment');
-//$db->where_between('id', '2000', '2002');
-//$db->having('id', '=', '2000');
-$db->order_by('id', 'asc');
-//print_r($db->get());
-echo '<br />';
-//print_r($db->check_query());
-
-$db->truncate('tbl_users');
-//$db->execute();
-
-// $arrs = array('forum_id=' => '4001');
-// $db->select_all('tbl_comment');
-// $db->where($arrs);
-// $db->limit(1);
-// echo '<br />';
-// print_r($db->get());
-// echo '<br />';
-// print_r($db->check_query());
-
-// $arr1 = array('user_id=' => '1002');
-// $db->select_all('tbl_comment');
-// $db->where($arr1);
-// $db->limit(1);
-// echo '<br />';
-// print_r($db->get());
-// echo '<br />';
-// print_r($db->check_query());
-
-// $db->select_all('tbl_comment');
-// $db->where_not_like('id','2001');
-// echo '<br />';
-// print_r($db->get());
-// echo '<br />';
-// print_r($db->check_query());
-
-// $db->select_fields('tbl_comment', array('id'));
-// $db->where_not_in('id', array('2000', '2001', '2002'));
-// echo '<br />';
-// print_r($db->get());
-// echo '<br />';
-// print_r($db->check_query());
-
-// $db->select_fields('tbl_comment AS a', array('a.id'));
-//$db->join('tbl_users AS b', 'a.user_id = b.id', 'INNER');
-// $db->group_by('forum_id');
-// $db->having('forum_id', '>', '4002');
-// $db->order_by(array('id' => 'ASC', 'forum_id' => 'ASC'));
-// echo '<br />';
-// echo json_encode($db->get());
-// echo '<br />';
-// print_r($db->check_query());
-
-// $arr = array('id=' => '2001');
-// $db->select_fields('tbl_comment', array('id')); 
-// $db->where($arr);
-// print_r($db->get_single_row());
-
-// print_r($db->check_query());
-
-
-// $max = $db->get_min('tbl_comment', 'id');
-// print_r($max->min_id);
 
 /*
 What is MWEB - Mobile Web PHP Database api?
 MWEB PHP Database api is a tool that you can use when you are manipulatiing data in your database like performing queries, joins etc.
 It is an open source project that you can use when you are developing WEB applications by simply downloading the file and 
 follow the instructions below.
-
 Want to contribute in this project?
 Kindly email this llauderesv@gmail.com
+*/
+
+/*
+* Why should I use this?
+* Image you are using the old fashion way when you are perfoming queries in your database you store them in the variable and execute it 
+* every time when you are making a query it is a tremendous lines of code by executing over and over again 
+* In MWEB Database API you can simple call the method and automatically execute it and also prevent the 
+* SQL injection when some hackers attack your database
+* By using this you can write a safer and cleaner code in your system and its open source
 */
 ##########################################################################################################################################################
 /*
@@ -331,7 +244,6 @@ if not you query is not take effect
 * echo $db->check_query();  // This will output INSERT INTO tbl_users (fname, lname, mname) VALUES ('John', 'Cruz', 'De Ocampo');
 * Note: The return value of this method is number of affected rows in your table
 
-
 * If you want to insert multiple data's you can achieve this by using multiple associative array inside an array
 * Consider this example:
 * $data =
@@ -340,7 +252,10 @@ if not you query is not take effect
 *     array('fname' => 'Alex', 'lname' => 'Cruz', 'mname' => 'De Ocampo'),
 *     array('fname' => 'Johny', 'lname' => 'Cruz', 'mname' => 'De Ocampo')
 *   );
-* echo $db->insert('tbl_users', $data);
+* $db->insert('tbl_users', $data);
+* echo $db->execute();
+* Note: If you perform the INSERT, UPDATE, DELETE you need to call the method execute() to your query take effect
+* The return value of this is the affected rows in the database
 */
 ##########################################################################################################################################################
 /*
@@ -353,25 +268,21 @@ if not you query is not take effect
 * $db->update('tbl_users', $data); // This will output UPDATE tbl_users SET fname = 'Vincent', lname = 'Llauderes'
 * Note: You can also use the where function when updating data's
 
-
 * Example:
 * $data = array('fname' => 'Vincent', 'lname' => 'Llauderes');
 * $db->update('tbl_users', $data); // This will output UPDATE tbl_users SET fname = 'Vincent', lname = 'Llauderes' WHERE id = 1;
 * $db->where(array('id =' => '1'));
-* The return value of this method is number of rows that will updated!
+* echo $db->execute(); // The return value of this method is number of rows that will updated!
 */
-// $data = array('fname' => 'Vincent', 'lname' => 'asdasdasdsada');
-// $val = $db->delete('tbl_users'); // This will output UPDATE tbl_users SET fname = 'Vincent', lname = 'Llauderes' WHERE id = 1;
-// $db->where_in('fname', array('vincent', 'llauderes'));
-// echo $val;
+##########################################################################################################################################################
 /*
 * SQL delete statement by using the method delete($table_name);
 * This methods accepts one parameter. The first parameter is the name of your table which will be data deleted!
 * Note: You can also use the where function when deleting data's
 * Consider this example:
-* $db->where(array('id' => '1', 'fname' => 'llauderes', '=', 'AND', 1));
-* $db->delete('tbl_users'); // This will output DELETE FROM tbl_users WHERE id = 1 AND fname = 'llauderes' LIMIT 1;
-* The return value of this method is number of rows that will deleted!
+* $db->delete('tbl_users'); // This will output UPDATE tbl_users SET fname = 'Vincent', lname = 'Llauderes' WHERE id = 1;
+* $db->where_in('fname', array('vincent', 'llauderes'));
+* echo $db->execute(); // The return value of this method is number of rows that will deleted!
 */
 ##########################################################################################################################################################
 /*
@@ -404,6 +315,69 @@ if not you query is not take effect
 * if will get the number of return rows
 * $db->get_num_rows() // This will output 10;
 */
+##########################################################################################################################################################
+/*
+*
+* SQL aggregate function
+* select_count($table_name) method
+* Counting the number of rows
+* This method accepts one parameter which the table that you will count
+* Example:
+* $total = $db->select_count('tbl_users'); // The return value of this method is associative array which you can access 
+* by using your variable that you will store the select count and lamda expression followed by the total_item
+* echo $total->total_item; // Display the total number of users
+* 
+*/
+##########################################################################################################################################################
+/*
+* get_average($table_name, $column_name);
+* Get the average of the specified column
+* Example:
+* $avg = $db->get_average('tbl_users', 'id');
+* // The return value of this method is associative array which you can access 
+* by using your variable that you will store followed by the 
+* name of your column that is (id) in our example//
+* echo $avg->id
+*
+*
+*/
+##########################################################################################################################################################
+/*
+* get_max($table_name, $column_name);
+* Get the maximum value in the specified column
+* Example:
+* $max_id = $db->get_max('tbl_users', 'id');
+* echo $max_id->id; // Get the maximum value in column id
+*
+*/
+##########################################################################################################################################################
+/*
+* get_min($table_name, $column_name);
+* Get the minimum value in the specified column
+* Example:
+* $min_id = $db->get_min('tbl_users', 'id');
+* echo $min_id->id; // Get the minimum value in column id
+*
+*/
+##########################################################################################################################################################
+/*
+* get_variance($table_name, $column_name);
+* Get the variance in the specified table
+* Example:
+* $variance = $db->get_variance('tbl_users', 'id');
+* echo $variance->id; // Get the variance in column id
+*
+*/
+##########################################################################################################################################################
+/*
+* get_sttdev($table_name, $column_name);
+* Get the standard deviation in the specified table
+* Example:
+* $sttdev = $db->get_sttdev('tbl_users', 'id');
+* echo $sttdev->id; // Get the standard deviation in column id
+*
+*/
+
 // $db->select_fields('tbl_users AS b', array('COUNT(b.fname)'));
 // $db->join('tbl_students AS a', 'b.id = a.id', 'RIGHT OUTER');
 // $db->where(array('lname' => 'llauderes'));
@@ -486,5 +460,104 @@ if not you query is not take effect
 // echo $db->check_query();
 
 */
+
+
+// require_once('api/mweb.php');
+
+// $db = mweb::connect('localhost', 'root', 'llauderesv321', 'mweb0');
+
+//$data = array('fname' => 'John', 'lname' => 'Cruz', 'mname' => 'De Ocampo');
+// $data =
+//    array(
+//      array('fname' => 'John', 'lname' => 'Cruz', 'mname' => 'De Ocampo'),
+//      array('fname' => 'Alex', 'lname' => 'Cruz', 'mname' => 'De Ocampo'),
+//      array('fname' => 'Johny', 'lname' => 'Cruz', 'mname' => 'De Ocampo')
+//    );
+// $db->insert('tbl_users', $data);
+// print_r($db->execute());
+// print_r($db->get_insert_id());
+//print_r($db->check_query());
+
+//$db->commit();
+
+//$db->beginTransaction();
+//print_r($db->check_query());
+
+// $data2 =array('fname' => 's', 'lname' => 'Llauderes', 'mname' => 'Calma');
+// $db->update('tbl_users', $data2);
+// print_r($db->execute());
+// print_r($db->check_query());
+
+// $db->delete('tbl_users');
+// $db->where(array('id>' => '1152'));
+// print_r($db->execute());
+
+// $arr = array('id=' => '2001', 'forum_id=' => '4001');
+// $db->select_all('tbl_comment');
+//$db->where_between('id', '2000', '2002');
+//$db->having('id', '=', '2000');
+// $db->order_by('id', 'asc');
+// print_r($db->get());
+// echo '<br />';
+// print_r($db->get_num_rows());
+//print_r($db->check_query());
+
+//$db->truncate('tbl_users');
+//$db->execute();
+
+// $arrs = array('forum_id=' => '4001');
+// $db->select_all('tbl_comment');
+// $db->where($arrs);
+// $db->limit(1);
+// echo '<br />';
+// print_r($db->get());
+// echo '<br />';
+// print_r($db->check_query());
+
+// $arr1 = array('user_id=' => '1002');
+// $db->select_all('tbl_comment');
+// $db->where($arr1);
+// $db->limit(1);
+// echo '<br />';
+// print_r($db->get());
+// echo '<br />';
+// print_r($db->check_query());
+
+// $db->select_all('tbl_comment');
+// $db->where_not_like('id','2001');
+// echo '<br />';
+// print_r($db->get());
+// echo '<br />';
+// print_r($db->check_query());
+
+// $db->select_fields('tbl_comment', array('id'));
+// $db->where_not_in('id', array('2000', '2001', '2002'));
+// echo '<br />';
+// print_r($db->get());
+// echo '<br />';
+// print_r($db->check_query());
+
+// $db->select_fields('tbl_comment AS a', array('a.id'));
+//$db->join('tbl_users AS b', 'a.user_id = b.id', 'INNER');
+// $db->group_by('forum_id');
+// $db->having('forum_id', '>', '4002');
+// $db->order_by(array('id' => 'ASC', 'forum_id' => 'ASC'));
+// echo '<br />';
+// echo json_encode($db->get());
+// echo '<br />';
+// print_r($db->check_query());
+
+// $arr = array('id=' => '2001');
+// $db->select_fields('tbl_comment', array('id')); 
+// $db->where($arr);
+// print_r($db->get_single_row());
+
+// print_r($db->check_query());
+
+
+// $max = $db->get_min('tbl_comment', 'id');
+// print_r($max->min_id);
+
+
 
 ?>

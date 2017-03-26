@@ -194,22 +194,22 @@ class mweb_pdo {
 	               $aggregate = 'COUNT(*) AS total_item';
 	               break;
 	            case 'AVG':
-	               $aggregate = 'AVG('.$column.') AS average_'.$column.'';
+	               $aggregate = 'AVG('.$column.') AS '.$column.'';
 	               break;
 	            case 'SUM':
-	               $aggregate = 'SUM('.$column.') AS sum_'.$column.'';
+	               $aggregate = 'SUM('.$column.') AS '.$column.'';
 	               break;
 	            case 'MAX':
-	               $aggregate = 'MAX('.$column.') AS max_'.$column.'';
+	               $aggregate = 'MAX('.$column.') AS '.$column.'';
 	               break;
 	            case 'MIN':
-	               $aggregate = 'MIN('.$column.') AS min_'.$column.'';
+	               $aggregate = 'MIN('.$column.') AS '.$column.'';
 	               break;
 	            case 'VARIANCE':
-	               $aggregate = 'VARIANCE('.$column.') AS variance_'.$column.''; // Get the definition in SQL books
+	               $aggregate = 'VARIANCE('.$column.') AS '.$column.''; // Get the definition in SQL books
 	               break;
 	            case 'STDDEV':
-	               $aggregate = 'STDDEV('.$column.') AS stddev_'.$column.''; // Get the definition in SQL books
+	               $aggregate = 'STDDEV('.$column.') AS '.$column.''; // Get the definition in SQL books
 	               break;
 	        }
 	        $this->_query = "SELECT $aggregate FROM " . $tbl_name;
@@ -626,7 +626,9 @@ class mweb_pdo {
 	    	$this->display_error('Invalid passing a parameter in truncate($tbl_name) method. Expects passing a one parameter only.', debug_backtrace());
       	}
    	} // End of truncate function!
+   	/*End of SQL manipulating database*/
 
+   	// Function for executing the queries
    	public function execute()
    	{
    		if (func_num_args() === 0) 
@@ -637,6 +639,34 @@ class mweb_pdo {
         {
 	    	// Display the error if the parameter is null
 	    	$this->display_error('Invalid passing a parameter in execute() method. Expects no parameter.', debug_backtrace());
+      	}
+   	} // End of execute function
+
+   	// Function for getting the insert id in the table
+   	public function get_insert_id()
+   	{
+   		if (func_num_args() === 0) 
+   		{
+   			return $this->_db->lastInsertId(); // Get the last insert id in the table
+   		}
+   		else
+        {
+	    	// Display the error if the parameter is null
+	    	$this->display_error('Invalid passing a parameter in get_insert_id() method. Expects no parameter.', debug_backtrace());
+      	}
+   	} // End of get insert if function
+
+   	// Function for getting the num rows
+   	public function get_num_rows()
+   	{
+   		if (func_num_args() === 0) 
+   		{
+   			return $this->_stmt->rowCount();
+   		}
+   		else
+        {
+	    	// Display the error if the parameter is null
+	    	$this->display_error('Invalid passing a parameter in get_insert_id() method. Expects no parameter.', debug_backtrace());
       	}
    	}
 
