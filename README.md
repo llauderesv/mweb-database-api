@@ -44,6 +44,7 @@ $users = $db->get();
 ````
 This will return an associative array. You can access this object by using the lambda expression (->).
 Example:
+```
 <table border="1">
    <thead>
       <tr>
@@ -65,6 +66,7 @@ Example:
       ?>
    </tbody>
 </table>
+```
 ##### Output:
 | First name     | Last name    | Middle name |
 | ---------------|--------------|-------------|
