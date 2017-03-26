@@ -1,0 +1,13 @@
+.div_error {
+	background-color: rgb(255, 197, 197); 
+	font-family: Times New Roman; 
+	padding: 15px; 
+	border: 1px solid #f18b8b;
+	color: #484848;
+	font-size: 18px;
+}
+.error {
+	color: #484848;
+	font-family: Times New Roman; 
+	font-weight: 500;
+}

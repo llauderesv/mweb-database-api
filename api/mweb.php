@@ -45,7 +45,7 @@ class mweb
    } // End of construct function!
 
    // Querying data in database!
-   public function select_all($tbl_name = NULL, $limit = NULL, $offset = NULL)
+   public function select_all($tbl_name = NULL)
    {
       if ($tbl_name !== NULL AND $tbl_name !== FALSE)
       {
@@ -54,9 +54,9 @@ class mweb
    } // End of select all function!
 
    // Selecting specific fields in the table!
-   public function select_fields($tbl_name = NULL, $fields = NULL, $limit = NULL, $offset = NULL)
+   public function select_fields($tbl_name = NULL, $fields = NULL)
    {
-      if ($fields !== NULL AND $fields !== FALSE)
+      if (is_array($fields) AND $fields !== FALSE)
       {
          $fields = implode(', ', $fields);
          $this->_query = "SELECT $fields FROM " . $tbl_name;
@@ -66,7 +66,7 @@ class mweb
    // Function counting the records in the table
    public function select_count($tbl_name = NULL)
    {
-      return $this->aggregate_function($tbl_name, null,'COUNT');
+      return $this->aggregate_function($tbl_name, null, 'COUNT');
    } // End of select count function
    
    // Function for getting the average
@@ -113,7 +113,6 @@ class mweb
          return $this->aggregate_function($tbl_name, $column, 'VARIANCE');
       }
    } // End of variance function
-
 
    // Function for getting the sttdev
    public function get_sttdev($tbl_name = NULL, $column = NULL)
@@ -179,54 +178,84 @@ class mweb
    } // End of offset function!
 
    // Function for getting the specific data!
-   public function where($clause = NULL, $operator = NULL, $condition = NULL)
+   public function where($clause = NULL, $condition = NULL)
    {
       // Condition for checking the clause variable if array or string!
       if (is_array($clause))
       {
          // If condition is NULL set the condition to AND
-         if ($condition === NULL || $condition === FALSE)
+         if (is_string($condition) || $condition === NULL || $condition === FALSE)
          {
             $condition = 'AND';
          }
-         // If operator is NULL set the operator to equal (=)
-         if ($operator === NULL || $operator === FALSE)
+         else
          {
-            $operator = '=';
+            die('<p style="background-color: #dedede; font-family: verdana; padding: 20px; border: 1px solid #CCC;"><span style="color: red;">Oops error:</span> The third parameter must be a string in the $db->where($clause, $operator, $condition); </p>');
          }
+
+         // if (is_string($operator) || $operator === NULL || $operator === FALSE) 
+         // {
+         //    $operator = '=';
+         // }
+         // else
+         // {
+         //    die('<p style="background-color: #dedede; font-family: verdana; padding: 20px; border: 1px solid #CCC;"><span style="color: red;">Oops error:</span> The second parameter must be a string in the $db->where($clause, $operator, $condition); </p>');
+         // }
          // clause variable is array!
-         foreach ($clause as $key =>$val)
+
+         foreach ($clause as $key => $val)
          {
-            $this->_where_clause .= $key . " $operator " . " '".$this->_db->real_escape_string($this->escape_html_string($val))."' $condition";
+            $this->_where_clause .= $key . " '".$this->_db->real_escape_string($this->escape_html_string($val))."' $condition ";
          }
          $this->_query .= " WHERE " . substr($this->_where_clause, 0, strripos($this->_where_clause, $condition)) . ' ';
+         $this->_where_clause = " WHERE " . substr($this->_where_clause, 0, strripos($this->_where_clause, $condition)) . ' ';
+         $this->_where_clause = NULL;
       }
-      else
+      else if (is_string($clause)) // If the where clause parameter is string
       {
          $this->_query .= $clause;
+         $this->_where_clause = $clause;
+         $this->_where_clause = NULL;
       }
    } // End of where function!
 
    // Function for where like
    public function where_like($column_name = NULL, $value = NULL)
    {
-      if ($column_name !== NULL AND $value !== NULL)
-      {
-         $this->_query .= " WHERE " . $column_name . " LIKE '".$value."' ";
-      }
+      $this->where_like_func($column_name, $value, ''); // Call the method of where like
    } // End of where like function!
 
    // Function for where not like
    public function where_not_like($column_name = NULL, $value = NULL)
    {
+      $this->where_like_func($column_name, $value, 'NOT'); // Call the method of where like
+   } // End of where not like function!
+
+   // Function for where like
+   private function where_like_func($column_name = NULL, $value = NULL, $type)
+   {
       if ($column_name !== NULL AND $value !== NULL)
       {
-         $this->_query .= " WHERE " . $column_name . " NOT  LIKE '".$value."' ";
+         $this->_query .= " WHERE " . $column_name . " ".($type !== NULL ? $type : '')." LIKE '".$value."' ";
+         $this->_where_clause = " WHERE " . $column_name . " ".($type !== NULL ? $type : '')." LIKE '".$value."' ";
+         $this->_where_clause = NULL;
       }
-   } // End of where not like function!
+   } // End of where like function
 
    // Function for where in!
    public function where_in($column_name = NULL, $value = array())
+   {
+      $this->where_in_func($column_name, $value, NULL); // Call the method of where in
+   } // End of where in function!
+
+   // Function for where not in
+   public function where_not_in($column_name = NULL, $value = array())
+   {
+      $this->where_in_func($column_name, $value, 'NOT'); // Call the method of where in
+   } // End of where not in function
+
+   // Function for where in and where not in
+   private function where_in_func($column_name = NULL, $value = array(), $type)
    {
       if ($column_name !== NULL AND is_array($value))
       {
@@ -235,12 +264,25 @@ class mweb
          {
             $param .=  "'" . $val . "',";
          }
-         $this->_query .= " WHERE " . $column_name . " IN (".substr($param, 0, strripos($param, ',')).") ";
+         $this->_query .= " WHERE " . $column_name . " ".($type !== NULL ? $type : '')." IN (".substr($param, 0, strripos($param, ',')).") ";
+         $this->_where_clause = " WHERE " . $column_name . " ".($type !== NULL ? $type : '')." IN (".substr($param, 0, strripos($param, ',')).") ";
+         $this->_where_clause = NULL;
       }
-   } // End of where in function!
+   } // End of where function
+
+   // Function for where between!
+   public function where_between($column_name = NULL, $value = NULL, $value_two = NULL)
+   {
+      if ($column_name !== NULL AND $value !== NULL AND $value_two !== NULL) 
+      {
+         $this->_query .= " WHERE " . $column_name . " BETWEEN '".$value."' AND '".$value_two."' ";
+         $this->_where_clause =" WHERE " . $column_name . " BETWEEN '".$value."' AND '".$value_two."' ";
+         $this->_where_clause = NULL;
+      }
+   } // End of where between function
 
    // Function for order by!
-   public function order_by($order_column = NULL)
+   public function order_by($order_column = NULL, $order_type = NULL)
    {
       // Check if the order by is associative array!
       if (is_array($order_column) AND count($order_column) > 0)
@@ -250,6 +292,10 @@ class mweb
             $this->_order_by .= $key . " " . $value . ",";
          }
          $this->_query .= " ORDER BY " . substr($this->_order_by, 0, strripos($this->_order_by, ','));
+      }
+      else if (is_string($order_column) AND $order_type !== NULL)
+      {
+         $this->_query .= " ORDER BY " . $order_column . ' ' . $order_type;
       }
    } // End of order by function!
 
@@ -289,57 +335,78 @@ class mweb
    // Function for join tables
    public function join($table_name = NULL, $column_join = NULL, $join_type = NULL)
    {
-      if ($table_name !== NULL AND $table_name !== FALSE) 
+      if ($table_name !== NULL AND $join_type !== NULL AND $column_join !== NULL) // Validate all the parameter if has a value
       {
          $join = NULL;
-         if ($join_type !== NULL AND $join_type !== FALSE) // Check if the join type is not empty!
-         {
-            switch (ucwords($join_type)) {
-               case 'LEFT':
-                  $join = $join_type;
-                  break;
-               case 'RIGHT':
-                  $join = $join_type;
-                  break;
-               case 'LEFT OUTER':
-                  $join = $join_type;
-                  break;
-               case 'RIGHT OUTER':
-                  $join = $join_type;
-                  break;
-            }
+         switch (ucwords($join_type)) {
+            case 'LEFT':
+               $join = $join_type;
+               break;
+            case 'RIGHT':
+               $join = $join_type;
+               break;
+            case 'LEFT OUTER':
+               $join = $join_type;
+               break;
+            case 'RIGHT OUTER':
+               $join = $join_type;
+               break;
+            case 'INNER':
+               $join = $join_type;
+               break;
          }
          $this->_query .= ($join !== NULL ? ' ' . $join : '') . " JOIN $table_name ON $column_join ";
       }
       return $this->_query;
    } // End of join function
 
-   // Function for executing the queries!
-   public function execute()
+   // Function for get the queries!
+   public function get()
    {
       $this->_result = $this->_db->query($this->_query);
       $this->sql_error();
-      return $this->fetch_row_query($this->_result);
-   } // End of execute function!
+      if ($this->_result->num_rows > 0) // Check if the result has a value
+      {
+         return $this->fetch_row_query($this->_result);
+      }
+      else // Else return 0
+      {
+         return 0;
+      }
+   } // End of get function!
+
+   // Function for get the single object
+   public function get_single_row()
+   {
+      $this->_result = $this->_db->query($this->_query);
+      $this->sql_error();
+      if ($this->_result->num_rows > 0) // Check if the result has a value
+      {
+         return $this->fetch_query($this->_result);
+      }
+      else // Else return 0
+      {
+         return 0;
+      }
+   } // End of get result
 
    // Function for checking the query!
    public function check_query()
    {
       return $this->_query;
    } // End of check query function
-
 ###################################### MANIPULATING DATABASE ###########################################################################################
-
    // Function for inserting data!
    public function insert($tbl_name = NULL, $data = array())
    {
       // Check if the table name is not NULL!
-      if ($tbl_name !== NULL AND $tbl_name !== FALSE)
+      if ($tbl_name !== NULL AND $data !== NULL)
       {
          if (is_array($data))
          {
             $column = NULL;
             $values = NULL;
+            $val = NULL;
             foreach ($data as $key => $value)
             {
                // Check if the array data is multple insertion or not!
@@ -347,14 +414,14 @@ class mweb
                {
                   foreach ($value as $key => $value)
                   {
-                     $column .= $key . ",";
-                     $values .= " ' ".$this->_db->real_escape_string($this->escape_html_string($value))." ', ";
+                     $column .= $key . ", ";
+                     $values .= "'".$this->_db->real_escape_string($this->escape_html_string($value))."',";
+
                   }
                   if ($column !== NULL AND $values !== NULL)
                   {
-                     $query = "INSERT INTO $tbl_name (".substr($column, 0, strripos($column, ',')).") VALUES (".substr($values, 0, strripos($values, ',')).") ";
-                     $this->_result = $this->_db->query($query);
-                     $this->sql_error();
+                     $val .= "(".substr($values, 0, strripos($values, ','))."),";
+                     $this->_query = "INSERT INTO $tbl_name (".substr($column, 0, strripos($column, ', ')).") VALUES ".substr($val, 0, strripos($val, ','))."";
                      $column = NULL;
                      $values = NULL;
                   }
@@ -362,43 +429,36 @@ class mweb
                else // Single insertion!
                {
                   $column .= $key . ",";
-                  $values .= " ' ".$this->_db->real_escape_string($this->escape_html_string($value))." ', ";
+                  $values .= "'".$this->_db->real_escape_string($this->escape_html_string($value))."',";
                }
             }
             if ($column !== NULL AND $values !== NULL)
             {
-               $this->insert_func($tbl_name, $column, $values);
+               $this->_query = "INSERT INTO $tbl_name (".substr($column, 0, strripos($column, ',')).") VALUES (".substr($values, 0, strripos($values, ',')).") ";
             }
-            return $this->_result === true ? true : false;
          }
+         $this->_result = $this->_db->query($this->_query);
+         $this->sql_error();
+         return $this->_db->affected_rows;
       }
    } // End of insert function!
-
-   // Function inserting the data!
-   private function insert_func($tbl_name, $column, $values)
-   {
-      $query = "INSERT INTO $tbl_name (".substr($column, 0, strripos($column, ',')).") VALUES (".substr($values, 0, strripos($values, ',')).") ";
-      $this->_result = $this->_db->query($query);
-      $this->sql_error();
-   } // End of insert func!
 
    // Function for updating the table!
    public function update($tbl_name = NULL, $data = array())
    {
-      if ($tbl_name !== NULL AND $tbl_name !== NULL)
+      if ($tbl_name !== NULL AND $data !== NULL)
       {
          if (is_array($data))
          {
             $param = NULL;
             foreach ($data as $key => $value)
             {
-               $param .= $key . ' = ' . "'" . $this->_db->real_escape_string($this->escape_html_string($value)) . "'" . ",";
+               $param .= $key . ' = ' . "'" . $this->_db->real_escape_string($this->escape_html_string($value)) . "'" . ", ";
             }
-            $query = "UPDATE $tbl_name SET ".substr($param, 0, strripos($param, ','))." ".($this->_where_clause !== NULL ? " $this->_where_clause" : "")." ";
-            $this->_result = $this->_db->query($query);
-            $this->sql_error();
+            $this->_query = "UPDATE $tbl_name SET ".substr($param, 0, strripos($param, ', '))." ".($this->_where_clause !== NULL ? " $this->_where_clause" : "")." ";
          }
-         $this->_where_clause = NULL;
+         $this->_result = $this->_db->query($this->_query);
+         $this->sql_error();
          return $this->_db->affected_rows;
       }
    } // End of update function!
@@ -408,10 +468,9 @@ class mweb
    {  // Check if the table name is empty!
       if ($tbl_name !== NULL AND $tbl_name !== NULL)
       {
-         $query = "DELETE FROM $tbl_name ".($this->_where_clause !== NULL ? " $this->_where_clause" : "") . " ";
-         $this->_result = $this->_db->query($query);
-         $this->sql_error(); // Check if there was a sql error!
-         $this->_where_clause = NULL;
+         $this->_query = "DELETE FROM $tbl_name ".($this->_where_clause !== NULL ? " $this->_where_clause" : "") . " ";
+         $this->_result = $this->_db->query($this->_query);
+         $this->sql_error();
          return $this->_db->affected_rows;
       }
    } // End of delete function!
@@ -427,9 +486,7 @@ class mweb
          return $this->_result === true ? true : false;
       }
    } // End of truncate function!
-
 #######################################################################################################################################
-
    // Using your own query!
    public function query($query)
    {
@@ -441,7 +498,7 @@ class mweb
             break;
          case 'INSERT':
                $this->_result = $this->_db->query($query);
-               return $this->_result === true ? true : false;
+               return $this->_db->affected_rows;
             break;
          case 'UPDATE':
                $this->_result = $this->_db->query($query);
@@ -474,14 +531,13 @@ class mweb
          $rows[] = $records;
       }
       return $this->sanitize_row_array($rows);
-      //return $this->result;
    } // End of fetch query function!
-
+ 
    // Function for fetching single object
    private function fetch_query($result)
    {
       return $result->fetch_object();
-   }  
+   } // End of fetch query  
 
    // Remove the htmlentities and escaping the string!
    private function sanitize_row_array($array)
@@ -517,10 +573,9 @@ class mweb
    {
       if (!$this->_result)
       {
-         die('<p style="background-color: #dedede; font-family: verdana; padding: 20px; border: 1px solid #CCC;"><span style="color: red;">Oops error:</span> ' . $this->_db->error . '</p>');
+         die('<p style=""><span style="">Oops error:</span> ' . $this->check_query() . '</p>');
       }
    } // End of sql error function!
 
 ######################################################################################################################
-
 }
