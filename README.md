@@ -36,14 +36,15 @@ $db = mweb::connect('localhost', 'root', '', 'students_db'); // You are connecte
 ```
 select_all($table_name, null, null)
 ```
-This will accept 1 parameter the which is the table that will be selected
+This will accept 1 parameter which is the table that will be selected
 #### Example:
 ```
-$db->select_all('tbl_users'); 
+$db->select_all('tbl_users'); // Get all the users
+
 $users = $db->get();
 ````
 This will return an associative array. You can access this object by using the lambda expression (->).
-Example:
+#### Example:
 ```
 <table border="1">
    <thead>
@@ -77,3 +78,39 @@ Example:
 Note: When you are performing SQL select statement also remember that you call this method $db->get() or $db->get_single_row() (for selecting single row only)
 for every query to get the return values in your queries
 if not you query is not take effect
+
+If you want to return a single row only kindly call the method
+```
+$users = $db->get_single_row(); // This will return a single row only
+echo $users->fname; // Display the first name
+```
+Note: If you perform a get_single_row() method and theres no data in your table the return value of this method is 0 indicating theres no data will be return
+
+### Selecting for specific fields or column in the table by using the method
+```
+select_fields($table_name, $arr_fields)
+```
+The first parameter is the table that will be selected in the database<br />
+The second parameter accepts an associative array which consists of array of fields<br />
+#### Example:
+```
+$arr_fields = array('fname', 'lname', 'mname'); // Create an array of fields that will be selected in the table
+
+$db->select_fields('tbl_users', $array_fields); // Call the method
+
+$users = $db->get(); // This will return an associative array
+```
+
+### SQL limit by using the method 
+```
+// This will accepts a integer value that the number of rows that you want to limit in your select statement
+limit($num); 
+```
+#### Example:
+```
+$db->select_all('tbl_users');
+
+$db->limit(10); // Limit the number of return rows to 10
+
+$users = $db->get(); // This will return an associative array
+```
