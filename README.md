@@ -438,3 +438,17 @@ Get the standard deviation in the specified table
 $sttdev = $db->get_sttdev('tbl_users', 'id');
 echo $sttdev->id; // Get the standard deviation in column id
 ```
+
+### SQL Transactions
+MWEB Database api is also supports transactions
+
+#### Example:
+Beginning the transactions
+```
+$db->beginTransaction();
+```
+
+If you want to commit transaction kindly call the method
+```
+$db->commit();
+```
