@@ -445,10 +445,10 @@ MWEB Database api is also supports transactions
 #### Example:
 Beginning the transactions
 ```
-$db->beginTransaction();
+$db->beginTransaction(); // Start the transaction
 ```
 
 If you want to commit transaction kindly call the method
 ```
-$db->commit();
+$db->commit(); // Committing all the changes
 ```
