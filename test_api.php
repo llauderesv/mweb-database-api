@@ -5,10 +5,14 @@
 
 </style>
 <?php
-require_once('api/mweb_pdo.php');
 
-$db = mweb_pdo::connect('localhost', 'root', 'llauderesv321', 'mweb0');
+require_once('api/mweb.php');
 
+$db = mweb::connect('localhost', 'root', 'llauderesv321', 'mweb0');
+
+$db->select_all('tbl_comment');
+$users = $db->get();
+print_r($users);
 /*
 What is MWEB - Mobile Web PHP Database api?
 MWEB PHP Database api is a tool that you can use when you are manipulatiing data in your database like performing queries, joins etc.
