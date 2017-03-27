@@ -1,5 +1,5 @@
-# What is MWEB - PHP Database api?
-MWEB PHP Database api is a tool that you can use when you are manipulatiing data in your database like performing queries, joins etc.
+# What is MWEB - Database api?
+MWEB Database api is a tool that you can use when you are manipulatiing data in your database like performing queries, joins etc.
 It is an open source project that you can use when you are developing WEB applications by simply downloading the file and 
 follow the instructions below.<br />
 Want to contribute in this project?<br />
