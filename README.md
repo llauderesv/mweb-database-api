@@ -76,7 +76,7 @@ This will return an associative array. You can access this object by using the l
 | Vianca         | Llauderes    | Calma       |
 | Vench John     | Llauderes    | Calma       |
 
-Note: When you are performing SQL select statement don't forget to call this method $db->get() or $db->get_single_row() (for selecting single row only)
+Note: When you are performing SQL select statement don't forget to call this method <b>$db->get()</b> or <b>$db->get_single_row()</b> (for selecting single row only)
 for every query to get the return values in your queries
 if not you query is not take effect
 
@@ -103,11 +103,12 @@ $db->select_fields('tbl_users', $array_fields); // Call the method
 $users = $db->get(); // This will return an associative array
 ```
 
-### SQL limit by using the method 
+### SQL limit function by using the method 
 ```
 limit($num); 
 ```
-This will accepts a integer value that the number of rows that you want to limit in your select statement
+
+This will accepts an integer value that the number of rows that you want to limit in your select statement
 #### Example:
 ```
 $db->select_all('tbl_users');
@@ -124,64 +125,97 @@ order_by($order_cloumn, $order_type)
 #### Example:
 ```
 $db->select_all('tbl_users');
-$db->order_by('fname', 'ASC');
+
+$db->order_by('fname', 'ASC'); // Order the returned rows to ascending order
+
 $db->limit(10);
+
 $users = $db->get();  // This will output SELECT * FROM tbl_users ORDER BY fname ASC LIMIT 10
 ```
 If you want to order multiple columns you can achieve this by simply passing an associative array in the 
-first parameter and make null in the second parameter
+first parameter and make it empty the second parameter
 The key is the fields or column that you want to be sorted and the value is the type of sort that you want
 #### Example:
+
 ```
-$db->order_by(array('id' => 'DESC', 'fname' => 'ASC'));
+$db->select_all('tbl_users');
+
+// Sort the first name column to descending order and last name to ascending order
+$db->order_by(array('id' => 'DESC', 'fname' => 'ASC')); 
+
 $db->limit(10);
+
 $users = $db->get();
+
 echo $db->check_query(); // This will output SELECT * FROM tbl_users ORDER BY id DESC, fname ASC LIMIT 10
 ```
 
 Note: Be careful the sequence when calling the methods when you are performing queries because this will cause an error
 The sequence is the same like when you are performing queries in the SQL.
+
 #### Example:
 ```
-$db->order_by(array('fname' => 'ASC'));
+$db->order_by(array('fname' => 'ASC')); // Invalid place of order by method
+
 $db->select_all('tbl_users');
+
 $users = $db->get(); // This will get an error
+
 echo $db->check_query(); // The will output ORDER BY fname ASC SELECT * FROM tbl_users 
 ```
 
 ### SQL group by statement by using the method
+
 ```
 group_by($val)
 ```
+
 This method accepts a string or an array parameter
+
 #### Example if you want to pass an array in the group by method
+
 ```
-$group_by_arr = array('fname', 'lname')
+$group_by_arr = array('fname', 'lname'); // Create an array of fields for group by
+
 $db->select_all('tbl_users');
+
 $db->order_by('fname', 'ASC');
+
 $db->group_by($group_by_arr); // Call the group by method
+
 $users = $db->get(); // This will output SELECT * FROM tbl_users GROUP BY fname, lname
 ```
+
 or if you pass a string in the group by method
+
 ```
 $db->select_all('tbl_users'); 
+
 $db->order_by('fname', 'ASC');
-$db->group_by('fname'); // Call the group by method
+
+$db->group_by('fname'); // Call the group by first name
+
 $users = $db->get(); // This will output SELECT * FROM tbl_users GROUP BY fname
 ```
 
 ### SQL having statement by using the method 
+
 ```
 having($column_name, $operator, $value);
 ```
-This method accepts three parameters. The first parameter is the column name that you want to specify and
-second parameter is the operator that you will use. The third parameter is the value
+This method accepts three parameters. The first parameter is the column name.
+The second parameter is the operator that you will use. The third parameter is the value
+
 #### Example:
+
 ```
 $db->select_all('tbl_users');
-$db->having('lname', '=', 'Cruz');
-$db->order_by();
-$users = $db->get();
+
+$db->having('lname', '=', 'Cruz'); // Select all the users having last name cruz
+
+$db->order_by('lname', 'ASC');
+
+$users = $db->get(); // This will output SELECT * FROM tbl_users HAVING lname = 'Cruz'
 ```
 
 ### SQL where clause statement by using the method 
@@ -273,6 +307,21 @@ SELECT a.fname, b.comment FROM tbl_users AS a INNER JOIN tbl_comment AS b ON a.i
 ```
 Note: in my previous example I use an alias when performing joins to make it easier
 
+### MWEB Database API also supports methods chaining
+
+#### Example:
+```
+$users = $db->select_all('tbl_users')
+            ->having('lname', '=', 'Llauderes')
+            ->order_by('lname', 'ASC')
+            ->get();
+
+print_r($users); // This will return an associative array
+
+echo $db->check_query(); // This will output SELECT * FROM tbl_users HAVING lname = 'Llauderes' ORDER BY lname ASC
+
+```
+Note: When you are performing method chaining don't forget to call the get() method in the last of your chaining
 
 ### SQL insert statement by using this method 
 ```
@@ -387,18 +436,24 @@ Counting the number of rows
 This method accepts one parameter which the table that you will count
 #### Example:
 ```
-$total = $db->select_count('tbl_users'); // The return value of this method is associative array which you can access 
+$total = $db->select_count('tbl_users')->get();
+// The return value of this method is associative array which you can access 
 by using your variable that you will store the select count and lamda expression followed by the total_item
 
 echo $total->total_item; // Display the total number of users
 ```
+
+Note: When performing aggregate function always call also the get() in the last of your query.
+It also supports method chaning.
+
+
 ```
-get_average($table_name, $column_name);
+get_average($table_name, $column_name)->get();
 ```
 Get the average of the specified column
 #### Example:
 ```
-$avg = $db->get_average('tbl_users', 'id'); // The return value of this method is associative array which you can access 
+$avg = $db->get_average('tbl_users', 'id')->get(); // The return value of this method is associative array which you can access 
 by using your variable that you will store followed by the 
 name of your column that is (id) in our example//
 echo $avg->id;
@@ -409,7 +464,7 @@ get_max($table_name, $column_name);
 Get the maximum value in the specified column
 #### Example:
 ```
-$max_id = $db->get_max('tbl_users', 'id');
+$max_id = $db->get_max('tbl_users', 'id')->get();
 echo $max_id->id; // Get the maximum value in column id
 ```
 ```
@@ -418,7 +473,7 @@ get_min($table_name, $column_name);
 Get the minimum value in the specified column
 #### Example:
 ```
-$min_id = $db->get_min('tbl_users', 'id');
+$min_id = $db->get_min('tbl_users', 'id')->get();
 echo $min_id->id; // Get the minimum value in column id
 ```
 ```
@@ -427,7 +482,7 @@ get_variance($table_name, $column_name);
 Get the variance in the specified table
 #### Example:
 ```
-$variance = $db->get_variance('tbl_users', 'id');
+$variance = $db->get_variance('tbl_users', 'id')->get();
 echo $variance->id; // Get the variance in column id
 ```
 
@@ -437,7 +492,7 @@ get_sttdev($table_name, $column_name);
 Get the standard deviation in the specified table
 #### Example:
 ```
-$sttdev = $db->get_sttdev('tbl_users', 'id');
+$sttdev = $db->get_sttdev('tbl_users', 'id')->get();
 echo $sttdev->id; // Get the standard deviation in column id
 ```
 

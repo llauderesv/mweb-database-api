@@ -93,6 +93,9 @@ class mweb {
 	    {	// Display the error if the parameter is null
 	    	$this->display_error('Invalid passing a parameter in select_all(tbl_name) method.', debug_backtrace());
 	    }
+
+        return $this; // Return the value for chaining method
+
 	} // End of select all function
 
     // Selecting specific fields in the table
@@ -107,6 +110,9 @@ class mweb {
 	    {	// Display the error if the parameter is null
 	    	$this->display_error('Invalid passing a parameter in select_fields($tbl_name, array()) method.', debug_backtrace());
 	    }
+
+        return $this; // Return the value for chaining method
+
     } // End of select fields function
 
     // Function for join tables
@@ -138,13 +144,14 @@ class mweb {
 	    {	// Display the error if the parameter is null
 	    	$this->display_error('Invalid passing a parameter in join($table_name, $column_join, $join_type) method.', debug_backtrace());
 	    }
-      	return $this->_query;
+
+        return $this; // Return the value for chaining method
    	} // End of join function
 
     // Function counting the records in the table
     public function select_count($tbl_name = NULL)
     {
-      	return $this->select_aggregate_function($tbl_name, '0', 'COUNT', debug_backtrace(), 1, 'select_count($tbl_name)');
+      	return $this->select_aggregate_function($tbl_name, '0', 'COUNT', debug_backtrace(), func_num_args(), 1, 'select_count($tbl_name)');
     } // End of select count function
 
    	// Function for getting the average
@@ -213,20 +220,28 @@ class mweb {
 	               break;
 	        }
 	        $this->_query = "SELECT $aggregate FROM " . $tbl_name;
-	    	return $this->get_func('single_row', $debug);
       	}
         else
 	    {	// Display the error if the parameter is null
 	    	$this->display_error("Invalid passing a parameter in your $func_name method.", $debug);
 	    }
+
+        return $this; // Return the value for chaining method
 	} // End of aggregate function
 
 	// Function for get the queries
-	public function get()
+	public function get($aggregate = NULL)
 	{
-		if (func_num_args() === 0) 
+		if (func_num_args() <= 1) 
 		{
-    		return $this->get_func(NULL, debug_backtrace());
+            if ($aggregate !== NULL) 
+            {
+                $this->get_func('single_row', debug_backtrace());
+            }
+            else
+            {
+                return $this->get_func(NULL, debug_backtrace());
+            }
 		}
 		else
 	    {	// Display the error if the parameter is null
@@ -293,6 +308,8 @@ class mweb {
 	    {	// Display the error if the parameter is null
 	    	$this->display_error("Invalid passing a parameter in limit($limit) method.", debug_backtrace());
 	    }
+
+        return $this; // Return the value for chaining method
     } // End of limit function
 
     // Function for offset!
@@ -306,6 +323,8 @@ class mweb {
 	    {	// Display the error if the parameter is null
 	    	$this->display_error("Invalid passing a parameter in offset($offset) method.", debug_backtrace());
 	    }
+
+        return $this; // Return the value for chaining method
     } // End of offset function!
 
     /*
@@ -341,7 +360,9 @@ class mweb {
 	    	// Display the error if the parameter is null
 	    	$this->display_error('Invalid passing a parameter in where(array(), $condition) method.', debug_backtrace());
 	    }
-	  //  $this->_where_values = array();
+
+        return $this; // Return the value for chaining method
+
    	} // End of where function!
 
    	// Function for where like
@@ -373,6 +394,8 @@ class mweb {
 	    	// Display the error if the parameter is null
 	    	$this->display_error('Invalid passing a parameter in '.$method_name.' method.', $debug);
       	}
+
+        return $this; // Return the value for chaining method
    	} // End of where like function
 
    	// Function for where in!
@@ -408,6 +431,8 @@ class mweb {
 	    	// Display the error if the parameter is null
 	    	$this->display_error('Invalid passing a parameter in '.$method_name.' method.', $debug);
       	}
+        
+        return $this; // Return the value for chaining method
    	} // End of where function
 
    	// Function for where between!
@@ -428,6 +453,8 @@ class mweb {
 	    	// Display the error if the parameter is null
 	    	$this->display_error('Invalid passing a parameter in where_between($column_name, $value, $value_two) method.', debug_backtrace());
       	}
+        
+        return $this; // Return the value for chaining method
    	} // End of where between function
 
    	/*
@@ -457,6 +484,8 @@ class mweb {
 	    	// Display the error if the parameter is null
 	    	$this->display_error('Invalid passing a parameter in order_by(array(), $order_type) method.', debug_backtrace());
       	}
+
+        return $this; // Return the value for chaining method
    	} // End of order by function!
 
    	// Function for group by
@@ -488,6 +517,8 @@ class mweb {
 	    	// Display the error if the parameter is null
 	    	$this->display_error('Invalid passing a parameter in group_by($group_column) method.', debug_backtrace());
       	}
+
+        return $this; // Return the value for chaining method
    	} // End of group by function
 
    	// Function for having clause!
@@ -504,6 +535,9 @@ class mweb {
 	    	// Display the error if the parameter is null
 	    	$this->display_error('Invalid passing a parameter in having($column, $operator, $value) method.', debug_backtrace());
       	}
+
+        return $this; // Return the value for chaining method
+
    	} // End of having function
    	/*
    	*
@@ -583,6 +617,8 @@ class mweb {
 	    	// Display the error if the parameter is null
 	    	$this->display_error('Invalid passing a parameter in update($tbl_name, $data) method.', debug_backtrace());
         }
+
+        return $this; // Return the value for chaining method
     } // End of update function!
 
     // Function for delete data!
@@ -600,6 +636,8 @@ class mweb {
 	    	// Display the error if the parameter is null
 	    	$this->display_error('Invalid passing a parameter in delete($tbl_name) method. Expects passing a one parameter only.', debug_backtrace());
       	}
+
+        return $this; // Return the value for chaining method
    	} // End of delete function!
 
 
