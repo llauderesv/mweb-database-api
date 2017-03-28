@@ -9,8 +9,8 @@ Kindly email this llauderesv@gmail.com<br />
 Imagine you are using the old fashion way when you are perfoming queries in your database you store them in the variable and execute it 
 every time when you are making a query it is a tremendous lines of code by executing over and over again 
 In MWEB Database API you can simple call the method and automatically execute it and also prevent the 
-SQL injection when some hackers attack your database
-By using this you can write a safer and cleaner code in your system and its open source.
+SQL injection when someone hackers attack your database
+By using this you can write a safer and cleaner code in your system and imagine its open source.
 
 ### How to use? <br />
 First and foremost you must include the mweb database api in your php file
