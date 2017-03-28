@@ -17,10 +17,11 @@ First and foremost you must include the mweb database api in your php file
 assigned it to variable your database connection
 #### Example: 
 ```
-require_once('api/mweb.php');
+require_once('api/mweb.php'); // Include the mweb database api to your project
+
 $db = mweb::connect($param1, $param2, $param3, $param4);
 ```
-The mweb constructor class has consist of 4 parameters<br />
+The mweb constructor class is consist of 4 parameters<br />
 The first parameter is the host name that is (localhost) for default<br />
 The second parameter is the username of your phpmyadmin for default that is (root)<br />
 The third parameter is the password of your phpmyadmin<br />
@@ -72,17 +73,18 @@ This will return an associative array. You can access this object by using the l
 | First name     | Last name    | Middle name |
 | ---------------|--------------|-------------|
 | Vincent        | Llauderes    | Calma       |
-| Vainca         | Llauderes    | Calma       |
+| Vianca         | Llauderes    | Calma       |
 | Vench John     | Llauderes    | Calma       |
 
-Note: When you are performing SQL select statement also remember that you call this method $db->get() or $db->get_single_row() (for selecting single row only)
+Note: When you are performing SQL select statement don't forget to call this method $db->get() or $db->get_single_row() (for selecting single row only)
 for every query to get the return values in your queries
 if not you query is not take effect
 
 If you want to return a single row only kindly call the method
 ```
 $users = $db->get_single_row(); // This will return a single row only
-echo $users->fname; // Display the first name
+
+echo $users->fname; // Display the first name 
 ```
 Note: If you perform a get_single_row() method and theres no data in your table the return value of this method is 0 indicating theres no data will be return
 
