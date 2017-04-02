@@ -3,6 +3,7 @@
  *   Author: MWEB - Mobile Web
  *   Website: <http://getmweb.hol.es>
  *   Date created: 3/18/2017
+ *   Last update: 4/01/2017
  *
  */
 class mweb {
@@ -496,7 +497,7 @@ class mweb {
         }
 
         return $this; // Return the value for chaining method
-        
+
    	} // End of order by function!
 
    	// Function for group by
