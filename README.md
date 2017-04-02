@@ -6,26 +6,28 @@ Want to contribute in this project?<br />
 Kindly email this llauderesv@gmail.com<br />
 
 ## Why should I use this?
-Imagine you are using the old fashion way when you are perfoming queries in your database you store them in the variable and execute it 
-every time when you are making a query it is a tremendous lines of code by executing over and over again 
-In MWEB Database API you can simple call the method and automatically execute it and also prevent the 
-SQL injection when someone hackers attack your database
+Imagine you are using the old fashion way when you are perfoming queries to your database you store them in the variable and execute them
+every time when you are making a query it is a tremendous waste lines of code by executing over and over again by the same approach
+In MWEB Database api you can simple call the built in methods and automatically execute it and also prevent the 
+SQL injection when someone hackers attacks your database
 By using this you can write a safer and cleaner code in your system and imagine its open source.
 
 ### How to use? <br />
 First and foremost you must include the mweb database api in your php file
-assigned it to variable your database connection
+assigned it to variable your database connection. That's it!
+
 #### Example: 
 ```
 require_once('api/mweb.php'); // Include the mweb database api to your project
 
 $db = mweb::connect($param1, $param2, $param3, $param4);
 ```
-The mweb constructor class is consist of 4 parameters<br />
+The mweb constructor is consist of 4 parameters<br />
 The first parameter is the host name that is (localhost) for default<br />
 The second parameter is the username of your phpmyadmin for default that is (root)<br />
 The third parameter is the password of your phpmyadmin<br />
 The fourth parameter is the database that you will use in the rest of your life<br />
+
 ### Example:
 ```
 $db = mweb::connect('localhost', 'root', '', 'students_db'); // You are connected to the database
@@ -35,17 +37,22 @@ $db = mweb::connect('localhost', 'root', '', 'students_db'); // You are connecte
 
 ### SQL select statement by using the method 
 ```
-select_all($table_name, null, null)
+select_all($table_name)
 ```
 This will accept 1 parameter which is the table that will be selected
+
 #### Example:
+
 ```
 $db->select_all('tbl_users'); // Get all the users
 
-$users = $db->get();
+$users = $db->get(); // Return an associative array of objects
 ````
-This will return an associative array. You can access this object by using the lambda expression (->).
+
+This will return an associative array. You can access return value by using the lambda expression (->).
+
 #### Example:
+
 ```
 <table border="1">
    <thead>
@@ -69,6 +76,7 @@ This will return an associative array. You can access this object by using the l
    </tbody>
 </table>
 ```
+
 ##### Output:
 | First name     | Last name    | Middle name |
 | ---------------|--------------|-------------|
@@ -82,65 +90,76 @@ if not you query is not take effect
 
 If you want to return a single row only kindly call the method
 ```
-$users = $db->get_single_row(); // This will return a single row only
+$users = $db->get_single_row(); // This will return an associative array of objects
 
 echo $users->fname; // Display the first name 
 ```
-Note: If you perform a get_single_row() method and theres no data in your table the return value of this method is 0 indicating theres no data will be return
+Note: If you perform a get_single_row() and get() method and theres no data in your table the return value of this method is 0 that is interger indicating theres no data will be return
 
 ### Selecting for specific fields or column in the table by using the method
 ```
-select_fields($table_name, $arr_fields)
+select_fields($table_name, array())
 ```
 The first parameter is the table that will be selected in the database<br />
-The second parameter accepts an associative array which consists of array of fields<br />
+The second parameter accepts an array which consists of array of fields<br />
+
 #### Example:
+
 ```
 $arr_fields = array('fname', 'lname', 'mname'); // Create an array of fields that will be selected in the table
 
 $db->select_fields('tbl_users', $array_fields); // Call the method
 
-$users = $db->get(); // This will return an associative array
+$users = $db->get(); // This will return an associative array of objects
 ```
 
-### SQL limit function by using the method 
+### SQL limit function by using the method
+
 ```
 limit($num); 
 ```
 
 This will accepts an integer value that the number of rows that you want to limit in your select statement
+
 #### Example:
+
 ```
 $db->select_all('tbl_users');
 
-$db->limit(10); // Limit the number of return rows to 10
+$db->limit(10); // Limit the number of returned rows to 10
 
-$users = $db->get(); // This will return an associative array
+$users = $db->get(); // This will return an associative array of objects
 ```
 
 ### SQL order by statement by using the method
+
 ```
 order_by($order_cloumn, $order_type)
 ```
+
 #### Example:
+
 ```
 $db->select_all('tbl_users');
 
-$db->order_by('fname', 'ASC'); // Order the returned rows to ascending order
+$db->order_by('fname', 'ASC'); // Order the returned rows to ascending
 
 $db->limit(10);
 
 $users = $db->get();  // This will output SELECT * FROM tbl_users ORDER BY fname ASC LIMIT 10
+
 ```
-If you want to order multiple columns you can achieve this by simply passing an associative array in the 
+If you want to order multiple columns. You can achieve this by simply passing an associative array in the 
 first parameter and make it empty the second parameter
 The key is the fields or column that you want to be sorted and the value is the type of sort that you want
+
 #### Example:
 
 ```
 $db->select_all('tbl_users');
 
 // Sort the first name column to descending order and last name to ascending order
+
 $db->order_by(array('id' => 'DESC', 'fname' => 'ASC')); 
 
 $db->limit(10);
@@ -150,10 +169,12 @@ $users = $db->get();
 echo $db->check_query(); // This will output SELECT * FROM tbl_users ORDER BY id DESC, fname ASC LIMIT 10
 ```
 
-Note: Be careful the sequence when calling the methods when you are performing queries because this will cause an error
-The sequence is the same like when you are performing queries in the SQL.
+Note: Be careful the sequence of calling the methods when performing queries because this will cause an error
+
+The sequence is the same when performing queries in the SQL.
 
 #### Example:
+
 ```
 $db->order_by(array('fname' => 'ASC')); // Invalid place of order by method
 
@@ -203,8 +224,9 @@ $users = $db->get(); // This will output SELECT * FROM tbl_users GROUP BY fname
 ```
 having($column_name, $operator, $value);
 ```
-This method accepts three parameters. The first parameter is the column name.
-The second parameter is the operator that you will use. The third parameter is the value
+This method accepts three parameters.<br /> 
+The first parameter is the column name.<br />
+The second parameter is the operator that you will use. The third parameter is the value<br />
 
 #### Example:
 
@@ -219,37 +241,52 @@ $users = $db->get(); // This will output SELECT * FROM tbl_users HAVING lname = 
 ```
 
 ### SQL where clause statement by using the method 
+
 ```
 where(array(), $condition)
 ```
-The first parameter is an associative array in the where clause which consist of key value pair
-The key in the associative array is the name of your fields or column followed by the operator that you'll use 
-where the value in the associative array is the data that will be selected
-The second parameter is the condition that you will use the where clause if you leave it null the default value of this is 'AND' condition
+
+The first parameter is an associative array in the where clause which consist of key value pair<br />
+The key in the associative array is the name of your fields or column followed by the operator that you'll use <br />
+where the value in the associative array is the data that will be selected<br />
+The second parameter is the condition that you will use the where clause if you leave it null the default value of this is 'AND' condition<br />
 
 #### Example:
+
 ```
 $arr = array('fname=' => 'John', 'lname=' => 'Cruz');
+
 $db->select_all('tbl_users'); 
+
 $db->where($arr, 'AND'); 
+
 $user = $db->get_single_row();
+
 echo $db->check_query(); // This will output SELECT * FROM tbl_users WHERE fname = 'John' AND lname = 'Cruz'
 ```
-Note: This is also execute safer queries!
+
+Note: You're not to worried about in SQL injection because this is also execute safer queries!
 
 ### SQL where like statement by using the method 
+
 ```
 where_like($column_name, $value);
 ```
 The first parameter is the column name the second parameter is the value that will get the occurence
+
 #### Example:
+
 ```
 $db->select_all('tbl_users');
+
 $db->where_like('fname', 'John');
+
 $users = $db->get(); // This will output SELECT * FROM tbl_users WHERE fname LIKE "John";
 ```
 Note: You can use your own wildcard when performing where_like
+
 #### Example:
+
 ```
 $db->select_all('tbl_users');
 $db->where_like('fname', '%John%');

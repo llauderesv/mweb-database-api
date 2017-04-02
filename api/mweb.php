@@ -108,7 +108,7 @@ class mweb {
         }
 	    else
 	    {	// Display the error if the parameter is null
-	    	$this->display_error('Invalid passing a parameter in select_fields($tbl_name, array()) method.', debug_backtrace());
+	    	$this->display_error('Invalid passing a parameter in select_fields($tbl_name, array()) method. Expected 1 parameter to be passed.', debug_backtrace());
 	    }
 
         return $this; // Return the value for chaining method
@@ -465,7 +465,7 @@ class mweb {
 
    	// Function for order by!
    	public function order_by($order_column = NULL, $order_type = NULL)
-   	{
+   	{   
       	// Check if the order by is associative array!
       	if (is_array($order_column) AND count($order_column) > 0 AND func_num_args() === 1)
       	{
@@ -474,18 +474,29 @@ class mweb {
             	$this->_order_by .= $key . " " . $value . ",";
          	}
          	$this->_query .= " ORDER BY " . substr($this->_order_by, 0, strripos($this->_order_by, ','));
-      	}
-      	else if (is_string($order_column) AND $order_type !== NULL AND func_num_args() === 2)
+        }
+        else if (is_string($order_column) AND $order_type !== NULL AND func_num_args() === 2)
       	{
          	$this->_query .= " ORDER BY " . $order_column . ' ' . $order_type;
       	}
-      	else
-      	{
-	    	// Display the error if the parameter is null
-	    	$this->display_error('Invalid passing a parameter in order_by(array(), $order_type) method.', debug_backtrace());
-      	}
+        else
+        {
+            // Check if argument is array
+            if (is_array($order_column)) 
+            {
+                $error_message = "Invalid passing a parameter in order_by(array()) method. Expected 1 parameter to be passed which is associative array";
+            } 
+            else
+            {
+                $error_message = 'Invalid passing a parameter in order_by($order_column, $order_type) method. Expected 2 parameters to be passed.';
+            }
+
+            // Display the error if the parameter is null
+            $this->display_error($error_message, debug_backtrace());
+        }
 
         return $this; // Return the value for chaining method
+        
    	} // End of order by function!
 
    	// Function for group by
@@ -725,8 +736,10 @@ class mweb {
     // Function for showing the SQL error!
     private function display_error($error, $debug)
     {
-     	echo "<link rel='stylesheet' href='api/styles.css'>";
-		echo '<p class="div_error">Error found in ' . $debug[0]['file'] . ' on line ' . $debug[0]['line'] .'.<br />'. $error . ' </p>';
+		echo '<p style="background-color: rgb(255, 197, 197); font-family: Times New Roman; 
+        padding: 15px; border: 1px solid #f18b8b;color: #484848; 
+        font-size: 18px;">
+        Error found in ' . $debug[0]['file'] . ' on line ' . $debug[0]['line'] .'.<br />'. $error . ' </p>';
     	die();
     } // End of sql error function!
 
