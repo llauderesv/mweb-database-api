@@ -289,64 +289,93 @@ Note: You can use your own wildcard when performing where_like
 
 ```
 $db->select_all('tbl_users');
+
 $db->where_like('fname', '%John%');
+
 $users = $db->get(); // This will output SELECT * FROM tbl_users WHERE fname LIKE "%John%";
 ```
 
 You can use also the where not like function which means compliment of like
 
 #### Example:
+
 ```
 $db->select_all('tbl_users');
+
 $db->where_not_like('fname', '%John%');
+
 $users = $db->get(); // This will output SELECT * FROM tbl_users WHERE fname NOT LIKE "%John%";
 ```
 ### SQL where in statement by using the method 
+
 ```
 where_in($column_name, array());
 ```
-This will accepts 2 parameters the first parameter is the column name and the second is an array of values
+This will accepts 2 parameters the first parameter is the column name and the second is an array of values.
+
 #### Example:
+
 ```
 $db->select_all('tbl_users');
+
 $db->where_in('fname', array('John', 'Alex', 'Jayson'));
+
 $users = $db->get(); // This will output SELECT * FROM tbl_users WHERE fname IN ('John', 'Alex', 'Jayson');
 ```
-You can also use the where not in method by using the method 
+
+You can also use the where not in method by using the 
+
 ```
 where_not_in($column_name, array());
 ```
 The parameters is the same in where_in method
 
 ### SQL join statement by using the method 
+
 ```
 join($table_name, $column_join, $join_type);
 ```
+
 This will accepts 3 parameters. <br />
-The first one is the table name that you want to join. The second is the column name that you want to join
-and the third is the join type that is(LEFT, RIGHT, INNER, LEFT OUTER, RIGHT OUTER)
+The first one is the table name that you want to join. The second is the column name that you want to join<br />
+and the third is the join type that is(LEFT, RIGHT, INNER, LEFT OUTER, RIGHT OUTER)<br />
+
 #### Example:
+
 ```
 $db->select_fields('tbl_users AS a', array('a.fname', 'b.comment'));
+
 $db->join('tbl_comment AS b', 'a.id = b.user_id', 'INNER');
+
 $users = $db->get();
+
 echo $db->check_query(); 
+
 // This will output SELECT a.fname, b.comment FROM tbl_users AS a INNER JOIN tbl_comment AS b ON a.id = b.id
+
 ```
+
 If you want to perform multiple joins kindly call again the method join for example
+
 ```
 $db->select_fields('tbl_users AS a', array('a.fname', 'b.comment'));
-$db->join('tbl_comment AS b', 'a.id = b.user_id', 'INNER');
-$db->join('tbl_post AS c', 'a.id = c.user_id', 'INNER');
-$users = $db->get();
-echo $db->check_query(); // This will output 
-SELECT a.fname, b.comment FROM tbl_users AS a INNER JOIN tbl_comment AS b ON a.id = b.id INNER JOIN tbl_post AS c ON a.id = c.id
-```
-Note: in my previous example I use an alias when performing joins to make it easier
 
-### MWEB Database API also supports methods chaining
+$db->join('tbl_comment AS b', 'a.id = b.user_id', 'INNER');
+
+$db->join('tbl_post AS c', 'a.id = c.user_id', 'INNER');
+
+$users = $db->get();
+
+echo $db->check_query();
+// This will output SELECT a.fname, b.comment FROM tbl_users AS a INNER JOIN tbl_comment AS b ON a.id = b.id INNER JOIN tbl_post AS c ON a.id = c.id
+```
+
+Note: in my previous example I use an alias in tables when performing joins to make it easier
+
+### MWEB Database API also supports method chaining
 
 #### Example:
+
 ```
 $users = $db->select_all('tbl_users')
             ->having('lname', '=', 'Llauderes')
@@ -361,92 +390,134 @@ echo $db->check_query(); // This will output SELECT * FROM tbl_users HAVING lnam
 Note: When you are performing method chaining don't forget to call the get() method in the last of your chaining
 
 ### SQL insert statement by using this method 
+
 ```
 insert($table_name, array());
 ```
+
 This methods accepts two parameters. The first parameter is the name of your table
 The second is the data will be insert, which is an associative array consist of key value pair.
-The key is the column name in your table and the value is the data will be inserted in the your table
+The key is the column name in your table and the value is the data will be inserted in the your column
+
 #### Example:
+
 ```
 $data = array('fname' => 'John', 'lname' => 'Cruz', 'mname' => 'De Ocampo');
+
 $db->insert('tbl_users', $data);
+
 echo $db->execute(); // The return value of this method is number of affected rows in your table
+
 echo $db->check_query();  // This will output INSERT INTO tbl_users (fname, lname, mname) VALUES ('John', 'Cruz', 'De Ocampo');
 ```
 
 If you want to insert batch data's you can achieve this by using multiple associative array inside an array
-Consider this example:
+
+#### Example:
+
+```
 $data =
   array(
     array('fname' => 'John', 'lname' => 'Cruz', 'mname' => 'De Ocampo'),
     array('fname' => 'Alex', 'lname' => 'Cruz', 'mname' => 'De Ocampo'),
     array('fname' => 'Johny', 'lname' => 'Cruz', 'mname' => 'De Ocampo')
   );
+
 $db->insert('tbl_users', $data);
+
 echo $db->execute();
-Note: If you perform the INSERT, UPDATE, DELETE don't forget to call the method execute() to your query take effect
-The return value of this is the affected rows in the database
+```
+Note: If you're performing the INSERT, UPDATE, DELETE don't forget to call the method execute() to make your query take effect
+The return value of this is the affected rows in your tables
 
 ### SQL update statement by using the method 
+
 ```
 update($table_name, array());
 ```
+
 This methods accepts two parameters. The first parameter is the name of your table
 The second is the data will be update which is an associative array consist of key value pair.
 The key is the fields or column name in your table and the value is the data will be updated in your table
+
 #### Example:
+
 ```
 $data = array('fname' => 'John', 'lname' => 'Llyod', 'mname' => 'Cruz');
+
 $db->update('tbl_users', $data); 
+
 echo $db->execute(); // This is will return the number of rows affected in your table
+
 echo $db->check_query() // This will output UPDATE tbl_users SET fname = 'Vincent', lname = 'Llauderes'
+
 ```
 Note: You can also use the where function when updating data's
 
 #### Example:
+
 ```
 $data = array('fname' => 'Vincent', 'lname' => 'Llauderes');
+
 $db->update('tbl_users', $data); 
+
 $db->where(array('id=' => '1'));
+
 echo $db->execute(); // The return value of this method is number of rows that will updated!
+
 echo $db->check_query(); // This will output UPDATE tbl_users SET fname = 'Vincent', lname = 'Llauderes' WHERE id = 1;
 ```
 
 ### SQL delete statement by using the method 
+
 ```
 delete($table_name);
 ```
+
 This methods accepts one parameter. The first parameter is the name of your table which will be data deleted!
 Note: You can also use the where function when deleting data's
+
 #### Example:
+
 ```
 $db->delete('tbl_users');
+
 $db->where_in('fname', array('vincent', 'llauderes'));
+
 echo $db->execute(); // The return value of this method is number of rows that will deleted!
+
 echo $db->check_query();  // This will output DELETE tbl_users WHERE fname IN ('vincent', 'llauderes');
 ```
 
 ### SQL truncate statement by using the method 
+
 ```
 truncate($table_name);
 ```
+
 This methods accepts one parameter. The first parameter is the name of your table which will be truncated!
+
 #### Example:
+
 ```
 $db->truncate('tbl_users'); // This will output TRUNCATE tbl_users;
 ```
 The return value of this method is 1 or 0 to determine if the query is work!
 
 ### SQL get insert id by using method
+
 ```
 get_insert_id();
 ```
-Basically this method will use after perform insert statement!
-This method has a return value that will get the inserted id in the table!
+
+Basically this method will use after perform insert statement!<br />
+This method has a return value that will get the inserted id in the table!<br />
+
 #### Example:
+
 Let's say you perform a SQL insert statement
 if will get the inserted id
+
 ```
 echo $db->get_insert_id() // This will get the inserted id
 ```
@@ -455,23 +526,30 @@ echo $db->get_insert_id() // This will get the inserted id
 ```
 get_num_rows();
 ```
+
 Basically this method will use after perform select statement!
 This method has a return value that will get the num of rows that will be selected in the table!
+
 #### Example:
+
 Let's say you perform a SQL select statement 
 if you perform the get_num_rows method
 if will get the number of returned rows
+
 ```
 echo $db->get_num_rows();
 ```
 
 ### SQL aggregate function
+
 ```
 select_count($table_name) method
 ```
-Counting the number of rows
+Counting the number of rows in your tables
 This method accepts one parameter which the table that you will count
+
 #### Example:
+
 ```
 $total = $db->select_count('tbl_users')->get();
 // The return value of this method is associative array which you can access 
@@ -487,8 +565,11 @@ It also supports method chaning.
 ```
 get_average($table_name, $column_name)->get();
 ```
+
 Get the average of the specified column
+
 #### Example:
+
 ```
 $avg = $db->get_average('tbl_users', 'id')->get(); // The return value of this method is associative array which you can access 
 by using your variable that you will store followed by the 
@@ -499,7 +580,9 @@ echo $avg->id;
 get_max($table_name, $column_name);
 ```
 Get the maximum value in the specified column
+
 #### Example:
+
 ```
 $max_id = $db->get_max('tbl_users', 'id')->get();
 echo $max_id->id; // Get the maximum value in column id
@@ -508,6 +591,7 @@ echo $max_id->id; // Get the maximum value in column id
 get_min($table_name, $column_name);
 ```
 Get the minimum value in the specified column
+
 #### Example:
 ```
 $min_id = $db->get_min('tbl_users', 'id')->get();
@@ -517,6 +601,7 @@ echo $min_id->id; // Get the minimum value in column id
 get_variance($table_name, $column_name);
 ```
 Get the variance in the specified table
+
 #### Example:
 ```
 $variance = $db->get_variance('tbl_users', 'id')->get();
@@ -527,6 +612,7 @@ echo $variance->id; // Get the variance in column id
 get_sttdev($table_name, $column_name);
 ```
 Get the standard deviation in the specified table
+
 #### Example:
 ```
 $sttdev = $db->get_sttdev('tbl_users', 'id')->get();

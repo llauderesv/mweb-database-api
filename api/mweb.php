@@ -1,11 +1,12 @@
 <?php
 /*
- *   Author: MWEB - Mobile Web
- *   Website: <http://getmweb.hol.es>
- *   Date created: 3/18/2017
- *   Last update: 4/01/2017
- *
- */
+*   Author: MWEB - Mobile Web
+*   Website: <http://getmweb.hol.es>
+*   Date created: 3/18/2017
+*   Last update: 4/01/2017
+*
+*/
+
 class mweb {
 
    private $_db;
@@ -688,7 +689,7 @@ class mweb {
    		else
         {
 	    	// Display the error if the parameter is null
-	    	$this->display_error('Invalid passing a parameter in execute() method. Expects no parameter.', debug_backtrace());
+	    	$this->display_error('Invalid passing a parameter in execute() method. Expects no parameter to be passed.', debug_backtrace());
       	}
    	} // End of execute function
 
