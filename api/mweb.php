@@ -3,7 +3,7 @@
 *   Author: MWEB - Mobile Web
 *   Website: <http://getmweb.hol.es>
 *   Date created: 3/18/2017
-*   Last update: 4/01/2017
+*   Last update: 4/02/2017
 *
 */
 
@@ -43,6 +43,66 @@ class mweb {
 			echo $err->getMessage();
 		}
     } // End of construct function!
+
+
+    // Function custom query
+    public function query($query)
+    {
+        if($query !== NULL AND func_num_args() === 1)
+        {
+            // Check if the query is select, insert, update, delete!
+            switch (ucwords(substr($query, 0, strpos($query, ' ')))) {
+                case 'SELECT':
+                    $this->_query = $query;
+                    return $this->get_func(NULL, debug_backtrace());
+                    break;
+
+                case 'INSERT':
+                    return $this->query_func($query, debug_backtrace());
+                    break;
+
+                case 'UPDATE':
+                    return $this->query_func($query, debug_backtrace());
+                    break;
+
+                case 'DELETE':
+                    return $this->query_func($query, debug_backtrace());
+                    break;
+
+                case 'TRUNCATE':
+                    return $this->query_func($query, debug_backtrace());
+                    break;
+
+                default:
+                    $this->display_error('Invalid passing a parameter in query() method. Expects a valid query to be passed.', debug_backtrace());
+                    break;
+            }
+        }
+        else
+        {   // Display the error if the parameter is null
+            $this->display_error('Invalid passing a parameter in query() method. Expects 1 parameter to be passed.', debug_backtrace());
+        }
+
+    } // End of query function
+
+    // Function in executing query statement
+    private function query_func($query, $debug)
+    {
+        try
+        {
+            $this->_stmt = $this->_db->prepare($query); // Prepare the PDO statement
+
+            $this->_stmt->execute(); // Execute the PDO statement with a parameterize query
+
+        } 
+        catch(PDOException $error)
+        {
+            //$this->_db->rollback(); // Rollback the database transaction
+            return $this->display_error($error->getMessage(), $debug); // Display the error to make them debuggable
+        }
+
+        return $this->_stmt->rowCount();
+    }
 
     /*
 	* SQL Transaction

@@ -497,6 +497,17 @@ truncate($table_name);
 
 This methods accepts one parameter. The first parameter is the name of your table which will be truncated!
 
+
+You can use also the query() method for creating you own query
+
+#### Example:
+
+```
+$users = $db->query("SELECT * FROM tbl_users WHERE id > 5");
+
+print_r($users);
+```
+
 #### Example:
 
 ```
