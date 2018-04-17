@@ -643,3 +643,8 @@ If you want to commit transaction kindly call the method
 ```
 $db->commit(); // Committing all the changes
 ```
+
+
+### License
+This is released under [MIT License](https://opensource.org/licenses/MIT)
+
