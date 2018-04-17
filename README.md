@@ -1,7 +1,7 @@
 # MWEB Database API
 
 <p align="center">
-   <img src="https://github.com/llauderesv/mweb-database-api/blob/master/banner-logo.png"/>
+   <img src="https://github.com/llauderesv/raw-images/blob/master/banner-logo.png"/>
 </p>
 
 ## What is MWEB - Database api?
