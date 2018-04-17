@@ -1,4 +1,9 @@
-# What is MWEB - Database api?
+# Welcome to MWEB Database API
+
+[![MWEB Logo](https://github.com/llauderesv/mweb-database-api/blob/master/banner-logo.png)]
+
+
+## What is MWEB - Database api?
 MWEB Database api is a tool that you can use when you are manipulatiing data in your database like performing queries, joins etc.
 It is an open source project that you can use when you are developing WEB applications by simply downloading the file and 
 follow the instructions below.<br />
