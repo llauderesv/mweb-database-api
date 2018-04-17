@@ -1,4 +1,4 @@
-# Welcome to MWEB Database API
+# MWEB Database API
 
 <p align="center">
    <img src="https://github.com/llauderesv/mweb-database-api/blob/master/banner-logo.png"/>
